@@ -1,4 +1,4 @@
 package javaclasses.drive;
 
-public class NoPermissionException {
+public class NoPermissionException extends Exception {
 }

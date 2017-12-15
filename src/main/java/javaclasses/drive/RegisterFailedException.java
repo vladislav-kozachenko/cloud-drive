@@ -1,4 +1,4 @@
 package javaclasses.drive;
 
-public class RegisterFailedException {
+public class RegisterFailedException extends Exception {
 }

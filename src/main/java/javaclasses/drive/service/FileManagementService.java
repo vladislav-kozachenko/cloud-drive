@@ -46,7 +46,7 @@ public interface FileManagementService {
      * Returns root folder.
      *
      * @param securityToken is token used to get user and its root folder.
-     * @return list of directories and files meta information, contained in root folder.
+     * @return list of files meta information, contained in root folder.
      * @throws NoPermissionException if user has no permission to open folder.
      */
     List<FileVO> listFiles(SecurityToken securityToken) throws NoPermissionException;
@@ -56,7 +56,7 @@ public interface FileManagementService {
      *
      * @param securityToken is token used to get user and check if it has permission to read the folder.
      * @param folderId      is the identifier of required folder.
-     * @return list of directories and files meta information, contained in the folder.
+     * @return list of files meta information, contained in the folder.
      * @throws FileNotFoundException if required folder isn't exist.
      * @throws NoPermissionException if user has no permission to open folder.
      */

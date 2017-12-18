@@ -22,6 +22,31 @@ public class CloudDriveTest {
     private InputStream stream;
 
     @Test
+    public void testFileStoring() throws
+            RegisterFailedException,
+            LoginFailedException,
+            NoPermissionException,
+            FileUploadingError,
+            FileNotFoundException {
+
+        // registration
+        UserVO user  = new UserVO(new Credentials("user", "password"));
+        userService.register(user);
+
+        // authentication
+        SecurityToken token = userService.logIn(user.getCredentials());
+
+        // uploading files
+        fileManagementService.upload(token, new FileVO("example.txt"), stream);
+        fileManagementService.upload(token, new FileVO("example2.txt"), stream);
+
+        // downloading files
+        List<FileVO> files = fileManagementService.listFiles(token);
+        fileManagementService.download(token, files.get(0).getId());
+        fileManagementService.download(token, files.get(1).getId());
+    }
+
+    @Test
     public void testFileSharing() throws
             RegisterFailedException,
             LoginFailedException,
@@ -31,31 +56,31 @@ public class CloudDriveTest {
             UserNotFoundException {
 
         // registration
-        UserVO user  = new UserVO(new Credentials("user1", "password"));
-        UserVO user2 = new UserVO(new Credentials("user2", "password"));
-        userService.register(user);
-        userService.register(user2);
+        UserVO vlad  = new UserVO(new Credentials("Vlad", "password"));
+        UserVO vasya = new UserVO(new Credentials("Vasya", "password"));
+        userService.register(vlad);
+        userService.register(vasya);
 
         // authentication
-        SecurityToken token = userService.logIn(user.getCredentials());
+        SecurityToken vladToken = userService.logIn(vlad.getCredentials());
 
         // uploading file
-        fileManagementService.createFolder(token, new FolderVO("example"));
-        FileVO sampleFile = fileManagementService.upload(token, new FileVO("example.txt"), stream);
+        fileManagementService.createFolder(vladToken, new FolderVO("example"));
+        FileVO sampleFile = fileManagementService.upload(vladToken, new FileVO("example.txt"), stream);
 
         // sharing and downloading file
         List<UserVO> users = new ArrayList<>();
-        users.add(user2);
-        fileSharingService.shareWithUsers(token, sampleFile, users);
+        users.add(vasya);
+        fileSharingService.shareWithUsers(vladToken, sampleFile, users);
 
-        SecurityToken token2 = userService.logIn(user.getCredentials());
-        fileManagementService.download(token2, sampleFile.getId());
+        SecurityToken vasyaToken = userService.logIn(vlad.getCredentials());
+        fileManagementService.download(vasyaToken, sampleFile.getId());
 
         // account deleting
-        userService.deleteAccount(token2, user2.getId());
+        userService.deleteAccount(vasyaToken, vasya.getId());
 
         // logging out
-        userService.logOut(token);
+        userService.logOut(vladToken);
     }
 
 }

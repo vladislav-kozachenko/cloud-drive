@@ -111,4 +111,38 @@ public class CloudDriveTest {
         userService.logOut(vladToken);
     }
 
+    @Test
+    public void testFolderSharing() throws
+            RegisterFailedException,
+            LoginFailedException,
+            NoPermissionException,
+            FileUploadingError,
+            FileNotFoundException,
+            UserNotFoundException {
+
+        // registration
+        UserVO vlad  = new UserVO(new Credentials("Vlad", "password"));
+        UserVO vasya = new UserVO(new Credentials("Vasya", "password"));
+        userService.register(vlad);
+        userService.register(vasya);
+
+        // authentication
+        SecurityToken vladToken = userService.logIn(vlad.getCredentials());
+
+        // uploading file
+        FolderVO folder = new FolderVO("example");
+        fileManagementService.createFolder(vladToken, folder);
+        fileManagementService.upload(vladToken, new FileVO("example.txt"), stream);
+
+        // sharing folder and downloading file
+        List<UserVO> users = new ArrayList<>();
+        users.add(vasya);
+        fileSharingService.shareFolderWithUsers(vladToken, folder, users);
+
+        SecurityToken vasyaToken = userService.logIn(vlad.getCredentials());
+        FileVO sampleFile = fileManagementService.listFiles(vasyaToken, folder.getId()).get(0);
+        fileManagementService.download(vasyaToken, sampleFile.getId());
+        
+    }
+
 }

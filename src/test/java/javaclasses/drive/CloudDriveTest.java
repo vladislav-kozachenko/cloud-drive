@@ -47,6 +47,29 @@ public class CloudDriveTest {
     }
 
     @Test
+    public void testFileRemoving() throws
+            RegisterFailedException,
+            LoginFailedException,
+            NoPermissionException,
+            FileUploadingError,
+            FileNotFoundException {
+
+        // registration
+        UserVO user  = new UserVO(new Credentials("user", "password"));
+        userService.register(user);
+
+        // authentication
+        SecurityToken token = userService.logIn(user.getCredentials());
+
+        // uploading files
+        FileVO file = new FileVO("example.txt");
+        fileManagementService.upload(token, file, stream);
+        fileManagementService.download(token, file.getId());
+        fileManagementService.delete(token, file.getId());
+
+    }
+
+    @Test
     public void testFileSharing() throws
             RegisterFailedException,
             LoginFailedException,
@@ -65,10 +88,12 @@ public class CloudDriveTest {
         SecurityToken vladToken = userService.logIn(vlad.getCredentials());
 
         // uploading file
-        fileManagementService.createFolder(vladToken, new FolderVO("example"));
-        FileVO sampleFile = fileManagementService.upload(vladToken, new FileVO("example.txt"), stream);
+        FolderVO folder = new FolderVO("example");
+        fileManagementService.createFolder(vladToken, folder);
+        fileManagementService.upload(vladToken, new FileVO("example.txt"), stream);
 
         // sharing and downloading file
+        FileVO sampleFile = fileManagementService.listFiles(vladToken, folder.getId()).get(0);
         List<UserVO> users = new ArrayList<>();
         users.add(vasya);
         fileSharingService.shareWithUsers(vladToken, sampleFile, users);
@@ -78,6 +103,9 @@ public class CloudDriveTest {
 
         // account deleting
         userService.deleteAccount(vasyaToken, vasya.getId());
+
+        // folder deleting
+        fileManagementService.deleteFolder(vladToken, folder.getId());
 
         // logging out
         userService.logOut(vladToken);

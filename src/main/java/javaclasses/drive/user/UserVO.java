@@ -15,19 +15,7 @@ public class UserVO {
         return credentials;
     }
 
-    public void setCredentials(Credentials credentials) {
-        this.credentials = credentials;
-    }
-
-    public UserVO(UserID id) {
-        this.id = id;
-    }
-
     public UserID getId() {
         return id;
-    }
-
-    public void setId(UserID id) {
-        this.id = id;
     }
 }

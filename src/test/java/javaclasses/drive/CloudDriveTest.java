@@ -1,5 +1,6 @@
 package javaclasses.drive;
 
+import javaclasses.drive.file.FileSystemItem;
 import javaclasses.drive.file.FileVO;
 import javaclasses.drive.file.FolderVO;
 import javaclasses.drive.service.FileManagementService;
@@ -41,7 +42,7 @@ public class CloudDriveTest {
         fileManagementService.upload(token, new FileVO("example2.txt"), stream);
 
         // downloading files
-        List<FileVO> files = fileManagementService.listFiles(token);
+        List<FileSystemItem> files = fileManagementService.enterRoot(token);
         fileManagementService.download(token, files.get(0).getId());
         fileManagementService.download(token, files.get(1).getId());
     }
@@ -93,10 +94,10 @@ public class CloudDriveTest {
         fileManagementService.upload(vladToken, new FileVO("example.txt"), stream);
 
         // sharing and downloading file
-        FileVO sampleFile = fileManagementService.listFiles(vladToken, folder.getId()).get(0);
+        FileSystemItem sampleFile = fileManagementService.enterFolder(vladToken, folder.getId()).get(0);
         List<UserVO> users = new ArrayList<>();
         users.add(vasya);
-        fileSharingService.shareWithUsers(vladToken, sampleFile, users);
+        fileSharingService.shareWithUsers(vladToken, sampleFile.getId(), users);
 
         SecurityToken vasyaToken = userService.logIn(vlad.getCredentials());
         fileManagementService.download(vasyaToken, sampleFile.getId());
@@ -105,7 +106,7 @@ public class CloudDriveTest {
         userService.deleteAccount(vasyaToken, vasya.getId());
 
         // folder deleting
-        fileManagementService.deleteFolder(vladToken, folder.getId());
+        fileManagementService.delete(vladToken, folder.getId());
 
         // logging out
         userService.logOut(vladToken);
@@ -137,10 +138,10 @@ public class CloudDriveTest {
         // sharing folder and downloading file
         List<UserVO> users = new ArrayList<>();
         users.add(vasya);
-        fileSharingService.shareFolderWithUsers(vladToken, folder, users);
+        fileSharingService.shareWithUsers(vladToken, folder.getId(), users);
 
         SecurityToken vasyaToken = userService.logIn(vlad.getCredentials());
-        FileVO sampleFile = fileManagementService.listFiles(vasyaToken, folder.getId()).get(0);
+        FileSystemItem sampleFile = fileManagementService.enterFolder(vasyaToken, folder.getId()).get(0);
         fileManagementService.download(vasyaToken, sampleFile.getId());
         
     }

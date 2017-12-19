@@ -1,28 +1,18 @@
 package javaclasses.drive.file;
 
-public class FileVO {
-
-    private FileId id;
-
-    private String name;
+public class FileVO extends FileSystemItem{
 
     public FileVO(String name) {
-        this.name = name;
+        super(name);
     }
 
-    public FileId getId() {
-        return id;
+    public FileVO(String name, FileSystemItem parent) {
+        super(name, parent);
     }
 
-    public void setId(FileId id) {
-        this.id = id;
+    @Override
+    public boolean isDirectory() {
+        return false;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 }

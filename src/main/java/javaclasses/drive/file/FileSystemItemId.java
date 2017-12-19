@@ -1,4 +1,4 @@
 package javaclasses.drive.file;
 
-public class FolderId {
+public class FileSystemItemId {
 }

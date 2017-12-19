@@ -19,7 +19,7 @@ import java.util.List;
 public interface FileManagementService {
 
     /**
-     * Uploads file from client to server using input stream.
+     * Uploads file from client to server using input stream into current folder.
      *
      * @param securityToken is token used to get user and check if it has permission to upload file.
      * @param fileVO        is an object that contains file meta information.
@@ -52,6 +52,7 @@ public interface FileManagementService {
 
     /**
      * Returns file system items of the folder with inputted id.
+     * Saves current folder to navigate and file uploading.
      *
      * @param securityToken is token used to get user and check if it has permission to read the folder.
      * @param folderId      is the identifier of required folder.

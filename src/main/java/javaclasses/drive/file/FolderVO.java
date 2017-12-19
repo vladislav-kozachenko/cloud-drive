@@ -6,7 +6,7 @@ public class FolderVO extends FileSystemItem{
         super(name);
     }
 
-    public FolderVO(String name, FileSystemItem parent) {
+    public FolderVO(String name, FolderVO parent) {
         super(name, parent);
     }
 

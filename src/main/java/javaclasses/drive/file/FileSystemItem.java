@@ -6,7 +6,7 @@ public abstract class FileSystemItem {
 
     private String name;
 
-    private FileSystemItem parent;
+    private FolderVO parent;
 
     public FileSystemItemId getId() {
         return id;
@@ -20,7 +20,7 @@ public abstract class FileSystemItem {
         this.name = name;
     }
 
-    public FileSystemItem(String name, FileSystemItem parent) {
+    public FileSystemItem(String name, FolderVO parent) {
         this.name = name;
         this.parent = parent;
     }
